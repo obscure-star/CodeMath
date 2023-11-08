@@ -17,10 +17,6 @@ class MainActivity : AppCompatActivity() {
     private val numberInput get() = binding.numberInput.text.toString().toFloat()
     private val powerInput get() = binding.powerInput.text.toString().toFloat()
 
-    private val countButtonMilli get() = binding.countButtonMilli
-    private val countButtonSecond get() = binding.countButtonSecond
-    private val countText get() = binding.countText
-    private val mainScope = MainScope()
     private var runningCountJob: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,8 +29,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupClickListeners(){
         compute.setOnClickListener { computeButtonClicked() }
-        countButtonMilli.setOnClickListener { countButtonClicked(1) }
-        countButtonSecond.setOnClickListener { countButtonClicked(1000) }
     }
 
     private fun computeButtonClicked() {
@@ -43,22 +37,6 @@ class MainActivity : AppCompatActivity() {
             output.text = result.toString()
         } catch (e: NumberFormatException) {
             output.text = "Invalid input" // Handle invalid input gracefully
-        }
-    }
-
-    private fun countButtonClicked(interval: Long) {
-        runningCountJob?.cancel()
-        val outputResult = output.text.toString().toFloatOrNull()?.toInt() ?: 0
-
-        runningCountJob = mainScope.launch {
-            try {
-                for (count in 0..outputResult) {
-                    countText.text = count.toString()
-                    delay(interval) // 1000 milliseconds = 1 second
-                }
-            } catch (e: NumberFormatException) {
-                countText.text = "Invalid result"
-            }
         }
     }
 
